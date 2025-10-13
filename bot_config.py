@@ -37,12 +37,16 @@ class NKbot:
         
         if comando == 'glbr':
             pass
+
         elif comando == 'glbr_s':
             tags.append('rating:safe')
+
         elif comando == 'glbr_q':
             tags.append('rating:questionable')
+
         elif comando == 'glbr_x':
             tags.append('rating:explicit')
+
         else:
             self.bot.reply_to(message, "Comando inválido.")
             return
@@ -78,7 +82,7 @@ class NKbot:
         except Exception as e:
             contador +=5
             print(f"[X] Error: {e}")
-            self.bot.send_message(chat_id=message.chat.id, text=f"[X] no se puede obtener el archivo\n error: {e}")
+            self.bot.send_message(chat_id=message.chat.id, text=f"[X] no se puede obtener el archivo\n\nerror: {e}\n\ntags: {", ".join(tags)}")
     
     def telegram_bot(self, message):
         mensaje = message.text.split()
