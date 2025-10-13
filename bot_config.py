@@ -47,24 +47,33 @@ class NKbot:
             self.bot.reply_to(message, "Comando inválido.")
             return
         
-        try:
-            url_file = asyncio.run(peticiones_gel.main(tags))
-            if not url_file:
-                self.bot.reply_to(message, "[!] No se encontró ninguna imagen")
-                return
-            file = url_file[0].lower()
+        contador = 1
+        while contador <= 5:
+            try:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                url_file = loop.run_until_complete(peticiones_gel.main(tags))
+                loop.close()
 
-            if file.endswith(('.jpg', '.jpeg', '.png')):
-                self.bot.send_photo(chat_id=message.chat.id, photo=file)
-            elif file.endswith(('.gif', '.webp')):
-                self.bot.send_animation(chat_id=message.chat.id, animation=file)
-            elif file.endswith(('.mp4', '.webm')):
-                self.bot.send_video(chat_id=message.chat.id, video=file)
-            else:
-                self.bot.reply_to(message, f"[!] archivo no reconocido\n{file}")
-        except Exception as e:
-            print(f"[X] Error: {e}")
-            self.bot.send_message(chat_id=message.chat.id, text=f"[X] no se puede obtener el archivo\n error: {e}")
+                if not url_file:
+                    self.bot.reply_to(message, "[!] No se encontró ninguna imagen")
+                    return
+                file = url_file[0].lower()
+
+                if file.endswith(('.jpg', '.jpeg', '.png')):
+                    self.bot.send_photo(chat_id=message.chat.id, photo=file)
+                elif file.endswith(('.gif', '.webp')):
+                    self.bot.send_animation(chat_id=message.chat.id, animation=file)
+                elif file.endswith(('.mp4', '.webm')):
+                    self.bot.send_video(chat_id=message.chat.id, video=file)
+                else:
+                    self.bot.reply_to(message, f"[!] archivo no reconocido\n{file}")
+                break
+            except Exception as e:
+                contador +=5
+                print(f"[X] Error: {e}")
+                if contador == 5:
+                    self.bot.send_message(chat_id=message.chat.id, text=f"[X] no se puede obtener el archivo\n error: {e}")
     
     def telegram_bot(self, message):
         mensaje = message.text.split()
