@@ -90,16 +90,15 @@ class NKbot:
         data = next((d for d in self.datos_comandos if d["comando"] == comando), None)
         if data:
             self.bot.send_message(chat_id=message.chat.id, text=f"{data['respuesta']}")
-        
 
 app = Flask(__name__)
-
 def start_bot():
     while True:
         try:
             bot_instance = NKbot()
             print("[+] Bot iniciado correctamente")
-            bot_instance.bot.infinity_polling(timeout=60, long_polling_timeout=5)
+            #bot_instance.bot.infinity_polling(timeout=60, long_polling_timeout=5)
+            bot_instance.bot.polling(timeout=60, long_polling_timeout=5)
         except Exception as e:
             print(f"[X] Error en el bot: {e}")
             print("[!] Reiniciando bot en 5 segundos...")
@@ -107,9 +106,6 @@ def start_bot():
 
 bot_thread = threading.Thread(target=start_bot, daemon=True)
 bot_thread.start()
-
-if not bot_thread.is_alive():
-    bot_thread.start()
 
 @app.route("/")
 def home():
