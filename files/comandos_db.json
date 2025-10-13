@@ -1,0 +1,12 @@
+[
+    {
+        "comando":"start",
+        "descripcion":"Iniciar bot",
+        "respuesta": "[+] Iniciando Bot"
+    },
+    {
+        "comando":"prueba",
+        "descripcion":"esto es solo un test",
+        "respuesta": "[+] Prueba de ejecución de respuestas"
+    }
+]
