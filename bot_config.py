@@ -105,7 +105,11 @@ def start_bot():
             print("[!] Reiniciando bot en 5 segundos...")
             import time; time.sleep(5)
 
-threading.Thread(target=start_bot, daemon=True).start()
+bot_thread = threading.Thread(target=start_bot, daemon=True)
+bot_thread.start()
+
+if not bot_thread.is_alive():
+    bot_thread.start()
 
 @app.route("/")
 def home():
