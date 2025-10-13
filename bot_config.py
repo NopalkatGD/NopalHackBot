@@ -10,8 +10,6 @@ import json
 # Tu clase NKbot tal cual
 class NKbot:
     def __init__(self):
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
 
         self.bot = telebot.TeleBot(crd.bot_api)
         
@@ -50,7 +48,7 @@ class NKbot:
             return
         
         try:
-            url_file = self.loop.run_until_complete(peticiones_gel.main(tags))
+            url_file = asyncio.run(peticiones_gel.main(tags))
             if not url_file:
                 self.bot.reply_to(message, "[!] No se encontró ninguna imagen")
                 return
