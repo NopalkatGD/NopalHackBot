@@ -78,24 +78,22 @@ class NKbot:
             return
         #Enviar mensaje
 
-        
-        while contador < 5:
-            try:
-                if file.endswith(('.jpg', '.jpeg', '.png')):
-                
-                    self.bot.send_photo(chat_id=message.chat.id, photo=file, caption=caption, parse_mode="HTML")
-                elif file.endswith(('.gif', '.webp')):
-                    self.bot.send_animation(chat_id=message.chat.id, animation=file , caption=caption, parse_mode="HTML")
-                elif file.endswith(('.mp4', '.webm')):
-                    self.bot.send_video(chat_id=message.chat.id, video=file , caption=caption , parse_mode="HTML")
-                else:
-                    self.bot.reply_to(message, f"[!] archivo no reconocido\n{file}")
-                break
-            except Exception as e:
-                contador +=5
-                print(f"[X] Error: {e}")
-        if contador >= 5:
-            self.bot.send_message(chat_id=message.chat.id, text=f"[X] no se puede obtener el archivo\n\nerror: {e}\n\ntags: {", ".join(tags)}\n\n enlace: {file}")
+        try:
+            if file.endswith(('.jpg', '.jpeg', '.png')):
+            
+                self.bot.send_photo(chat_id=message.chat.id, photo=file, caption=caption, parse_mode="HTML")
+            elif file.endswith(('.gif', '.webp')):
+                self.bot.send_animation(chat_id=message.chat.id, animation=file , caption=caption, parse_mode="HTML")
+            elif file.endswith(('.mp4', '.webm')):
+                self.bot.send_video(chat_id=message.chat.id, video=file , caption=caption , parse_mode="HTML")
+            else:
+                self.bot.reply_to(message, f"[!] archivo no reconocido\n{file}")
+            
+        except Exception as e:
+            contador +=5
+            print(f"[X] Error: {e}")
+            self.bot.reply_to(message, f"[!] archivo no encontrado")
+
     
     def telegram_bot(self, message):
         mensaje = message.text.split()
