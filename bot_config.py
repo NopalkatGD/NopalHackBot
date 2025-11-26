@@ -6,6 +6,7 @@ import credenciales as crd
 import peticiones_gel
 import telebot
 import json
+import time
 
 # Tu clase NKbot tal cual
 class NKbot:
@@ -43,12 +44,14 @@ class NKbot:
 
         elif comando == 'glbr_q':
             tags.append('rating:questionable')
+
         elif comando == 'glbr_x':
             tags.append('rating:explicit')
+
         else:
             self.bot.reply_to(message, "Comando inválido.")
             return
-
+        
         file = ""
         caption = ""
         contador = 0
@@ -65,34 +68,46 @@ class NKbot:
                 return
             
             file = url_file[0][0].lower()
-
             caption = f"<a href='{url_file[1][0]}'>Source</a>"
+
             if url_file[2][0] != '':
                 caption = f"{caption} - <a href='{url_file[2][0]}'>Original Source</a>"
+            
         except KeyError:
-            self.bot.send_message(chat_id=message.chat.id, text=f"[X] No se puede encontrar la publicación en Gelbooru, revisa las etiquetas\n\ntags: {", ".join(mensaje[1:])}")
+            self.bot.send_message(
+                chat_id=message.chat.id, 
+                text=f"[X] No se puede encontrar la publicación en Gelbooru, revisa las etiquetas\n\ntags: {", ".join(mensaje[1:])}")
             return
+
         except Exception as e:
             print(f"[X] Error: {e}")
             self.bot.send_message(chat_id=message.chat.id, text=f"[X] Error inesperado: {e}")
             return
         #Enviar mensaje
+        sent = False
 
-        try:
-            if file.endswith(('.jpg', '.jpeg', '.png')):
+        for intento in range(0, 5):
+            try:
+                if file.endswith(('.jpg', '.jpeg', '.png')):
+                    self.bot.send_photo(chat_id=message.chat.id, photo=file, caption=caption, parse_mode="HTML")
+
+                elif file.endswith(('.gif', '.webp')):
+                    self.bot.send_animation(chat_id=message.chat.id, animation=file , caption=caption, parse_mode="HTML")
+
+                elif file.endswith(('.mp4', '.webm')):
+                    self.bot.send_video(chat_id=message.chat.id, video=file , caption=caption , parse_mode="HTML")
+
+                else:
+                    self.bot.reply_to(message, f"[!] archivo no reconocido\n[+] archivo{file}\n[+] url{url_file[1][0]}\n[+] original{url_file[2][0]}")
+                sent = True
+                break
+
+            except Exception as e:
+                print(f"[X] Error: {e}")
+                time.sleep(1)
             
-                self.bot.send_photo(chat_id=message.chat.id, photo=file, caption=caption, parse_mode="HTML")
-            elif file.endswith(('.gif', '.webp')):
-                self.bot.send_animation(chat_id=message.chat.id, animation=file , caption=caption, parse_mode="HTML")
-            elif file.endswith(('.mp4', '.webm')):
-                self.bot.send_video(chat_id=message.chat.id, video=file , caption=caption , parse_mode="HTML")
-            else:
-                self.bot.reply_to(message, f"[!] archivo no reconocido\n{file}")
-            
-        except Exception as e:
-            contador +=5
-            print(f"[X] Error: {e}")
-            self.bot.reply_to(message, f"[!] archivo no encontrado")
+        if not sent:
+            self.bot.reply_to(message, f"[!] No es posible enviar el archivo. \nArchivo: {url_file[1][0]}")
 
     
     def telegram_bot(self, message):
