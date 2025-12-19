@@ -25,6 +25,7 @@ class NKbot:
         self.bot.set_my_commands(lst_comandos)
         self.bot.register_message_handler(self.telegram_bot, commands=self.comandos, chat_types=['private', 'group', 'supergroup'])
         self.bot.register_message_handler(self.send_file, commands=["glbr","glbr_s", "glbr_q", "glbr_x"], chat_types=['private', 'group', 'supergroup'])
+        self.bot.register_message_handler(self.dlt_message, commands=["dlt"], chat_types=['private', 'group', 'supergroup'])
         
     def comandos_json(self):
         with open('files/comandos_db.json', 'r', encoding="utf-8") as file:
@@ -116,7 +117,33 @@ class NKbot:
         data = next((d for d in self.datos_comandos if d["comando"] == comando), None)
         if data:
             self.bot.send_message(chat_id=message.chat.id, text=f"{data['respuesta']}")
-
+    
+    def dlt_message(self, message):
+        
+        if not message.reply_to_message:
+            self.bot.reply_to(message, 'usa /dlt unicamente en mensajes del bot')
+            return
+        
+        replied = message.reply_to_message
+        if not replied.from_user or not replied.from_user.is_bot:
+            self.bot.reply_to()
+            message, '/dlt solo funciona por mensajes del bot'
+            return
+        
+        try:
+            self.bot.delete_message(
+                chat_id=message.chat.id,
+                message_id=replied.message_id
+            )
+            self.bot.delete_message(
+                chat_id=message.chat.id,
+                message_id=message.message_id
+            )
+        except Exception as e:
+            self.bot.reply_to(
+                message,
+                f"No se pudo borrar el mensaje.\nError: {e}"
+            )
 app = Flask(__name__)
 def start_bot():
     while True:
