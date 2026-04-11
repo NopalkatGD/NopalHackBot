@@ -9,7 +9,7 @@ app = Flask(__name__)
 bot_instance = NHbot.TelegramConfig()
 bot = bot_instance.bot
 
-WEBHOOK_URL = os.environ.get("WEBHOOK_URL", "")
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL", "https://nopalhackbot.onrender.com")
 WEBHOOK_PATH = os.environ.get("WEBHOOK_PATH", "/webhook")
 
 if WEBHOOK_URL:
