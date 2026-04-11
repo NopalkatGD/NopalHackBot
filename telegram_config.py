@@ -15,9 +15,9 @@ class TelegramConfig:
         self.tags_censuradas = self.comandos.lst_valor_por_ruta('.//tags_censuradas/')
         self.tags_baneadas = self.comandos.lst_valor_por_ruta('.//tags_baneadas/')
 
-        comandos_default = self.comandos.dict_comandos('.//bot_comands/default_comands/')
-        comandos_gelbooru = self.comandos.dict_comandos('.//bot_comands/gelbooru_comands/')
-        comandos_msg_mngr = self.comandos.dict_comandos('.//bot_comands/message_manager/')
+        comandos_default = list(self.comandos.dict_comandos('.//bot_comands/default_comands/').keys())
+        comandos_gelbooru = list(self.comandos.dict_comandos('.//bot_comands/gelbooru_comands/').keys())
+        comandos_msg_mngr = list(self.comandos.dict_comandos('.//bot_comands/message_manager/').keys())
 
         #implementar cuando vea que todo funcione
         #comandos_blackwall = self.comandos.dict_comandos('.//bot_comands/dialogs_comands/')
@@ -26,7 +26,7 @@ class TelegramConfig:
 
         #comandos por defecto
         self.bot.register_message_handler(self.default_messages, commands=comandos_default, chat_types=chat_types)
-        self.bot.register_message_handler(self.senfile, commands=comandos_gelbooru,chat_types=chat_types)
+        self.bot.register_message_handler(self.senfile, commands=comandos_gelbooru, chat_types=chat_types)
         self.bot.register_message_handler(self.dlt_message, commands=comandos_msg_mngr, chat_types=chat_types)
 
         #registrar comandos en telegram
