@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 
 class ComandosXML:
     def __init__(self):
-        self.xml_file = r"files\comandos_xml.xml"
+        self.xml_file = r"files/comandos_xml.xml"
         self.tree = ET.parse(self.xml_file)
         self.root = self.tree.getroot()
 
