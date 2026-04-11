@@ -178,3 +178,9 @@ class TelegramConfig:
             )
         except Exception as e:
             self.bot.reply_to(message, f"No se pudo borrar el mensaje.\nError: {e}")
+
+    def configurar_webhook(self, webhook_url: str):
+        from telebot import types
+        self.bot.remove_webhook()
+        self.bot.set_webhook(url=webhook_url)
+        print(f"[+] Webhook configurado: {webhook_url}")

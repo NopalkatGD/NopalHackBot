@@ -1,36 +1,32 @@
-from flask import Flask
+from flask import Flask, request, Response
 import time
 import telegram_config as NHbot
 import os
+import telebot.types
 
-#Usar flask para mantener el servicio activo en render
 app = Flask(__name__)
-def start_bot():
-    while True:
-        try:
-            bot_instance = NHbot.TelegramConfig()
-            print('[+] Inicializando Bot')
-            bot_instance.bot.polling(timeout=50, long_polling_timeout=5)
-        except Exception as e:
-            error_str = str(e)
-            print(f"[X] Error en el bot: {e}")
-            
-            if "429" in error_str and "retry after" in error_str:
-                try:
-                    retry_seconds = int(error_str.split("retry after")[1].split(".")[0].strip())
-                    print(f"[!] Rate limited. Esperando {retry_seconds} segundos...")
-                    time.sleep(retry_seconds)
-                except:
-                    print("[!] Reiniciando bot en 60 segundos...")
-                    time.sleep(60)
-            else:
-                print("[!] Reiniciando bot en 5 segundos...")
-                time.sleep(5)
 
-start_bot()
+bot_instance = NHbot.TelegramConfig()
+bot = bot_instance.bot
+
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL", "")
+WEBHOOK_PATH = os.environ.get("WEBHOOK_PATH", "/webhook")
+
+if WEBHOOK_URL:
+    bot.remove_webhook()
+    time.sleep(1)
+    bot.set_webhook(url=WEBHOOK_URL + WEBHOOK_PATH)
+    print(f"[+] Webhook configurado: {WEBHOOK_URL + WEBHOOK_PATH}")
+
+@app.route(WEBHOOK_PATH, methods=["POST"])
+def webhook():
+    update = telebot.types.Update.de_json(request.get_json())
+    bot.process_new_updates([update])
+    return Response("OK", status=200)
+
 @app.route("/")
 def home():
-    return "[+] Bot corriendo"
+    return "[+] Bot corriendo con webhook"
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
