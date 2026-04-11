@@ -30,9 +30,23 @@ class TelegramConfig:
         self.bot.register_message_handler(self.dlt_message, commands=comandos_msg_mngr, chat_types=chat_types)
 
         #registrar comandos en telegram
-        self.mk_comandos('.//bot_comands/default_comands/')
-        self.mk_comandos('.//bot_comands/gelbooru_comands/')
-        self.mk_comandos('.//bot_comands/message_manager/')
+        comandos_telegram = []
+        
+        for xpath in [
+            './/bot_comands/default_comands/',
+            './/bot_comands/gelbooru_comands/',
+            './/bot_comands/message_manager/'
+        ]:
+            datos_comandos = self.comandos.dict_comandos(xpath)
+            for comando, atributos in datos_comandos.items():
+                comandos_telegram.append(
+                    telebot.types.BotCommand(
+                        comando.lower().strip().replace("/", ""), 
+                        atributos["descripcion"].strip()
+                    )
+                )
+        
+        self.bot.set_my_commands(comandos_telegram)
 
     def default_messages(self, message):
         self.bot.send_message(chat_id=message.chat.id, text='Inicializando bot')
@@ -164,20 +178,3 @@ class TelegramConfig:
             )
         except Exception as e:
             self.bot.reply_to(message, f"No se pudo borrar el mensaje.\nError: {e}")
-
-    
-
-    def mk_comandos(self, xml_xpath:str):
-        datos_comandos = self.comandos.dict_comandos(xml_xpath)
-        
-        
-        comandos_telegram = []
-        comandos_lst = []
-        for comando, atributos in datos_comandos.items():
-            #test print
-            #print(f"{comando} | {atributos}")
-            #"comando" | {"descripcion":"desc", "respuesta":"resp"}
-            comandos_telegram.append(telebot.types.BotCommand(comando.lower().strip().replace("/", ""), atributos["descripcion"].strip()))
-            comandos_lst.append(comando.lower().strip().replace("/", ""))
-        self.bot.set_my_commands(comandos_telegram)
-        return comandos_lst
