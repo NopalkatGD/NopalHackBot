@@ -8,6 +8,8 @@ import telebot
 import json
 import time
 
+
+#OBSOLETO: usar telegram_config.py
 # Tu clase NKbot tal cual
 class NKbot:
     def __init__(self):

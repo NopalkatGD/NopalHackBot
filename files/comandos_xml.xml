@@ -1,0 +1,103 @@
+<bot>
+    <bot_comands>
+        <!-- comados principales-->
+        <default_comands>
+            <comando descripcion="Iniciar bot" respuesta="[+] Iniciando Bot">start</comando>
+        </default_comands>
+        <gelbooru_comands> 
+            <comando descripcion="Buscar una imagen aleatoria en Gelbooru" respuesta = "r img">glbr</comando>
+            <comando descripcion="Buscar una imagen normal en Gelbooru" respuesta = "s img">glbr_s</comando>
+            <comando descripcion="Buscar una imagen cuestionable en Gelbooru" respuesta = "q img">glbr_q</comando>
+            <comando descripcion="Buscar una imagen +18 en Gelbooru" respuesta = "x img">glbr_x</comando>
+        </gelbooru_comands>
+        <message_manager>
+            <comando descripcion="Eliminar mensajes" respuesta="dlt msg">dlt</comando>
+        </message_manager>
+        <!-- no usar-->
+        <dialogs_comands>
+            <comando descripcion="No usar" respuesta = "No usar">BlackWallGateway</comando>
+        </dialogs_comands>
+    </bot_comands>
+
+    <!-- etiquetas muy feas, si la imagen tienen una de estas, enviar como spoiler a menos de que se encuentre en el mensaje, ya es bajo su propio criterio del usuario-->
+    <tags_censuradas>
+        <tag>corpse</tag>
+        <tag>poop</tag>
+        <tag>netorare</tag>
+        <tag>snuff</tag>
+        <tag>guro</tag>
+        <tag>ryona</tag>
+        <tag>death</tag>
+        <tag>strangulation</tag>
+        <tag>asphyxiation</tag>
+        <tag>drowned</tag>
+        <tag>drowning</tag>
+        <tag>rape</tag>
+        <tag>futanari</tag>
+        <tag>gore</tag>
+        <tag>scat</tag>
+        <tag>vomit</tag>
+        <tag>torture</tag>
+        <tag>urination</tag>
+        <tag>peeing</tag>
+        <tag>pee</tag>
+        <tag>defecation</tag>
+        <tag>hypnosis</tag>
+        <tag>mind_control</tag>
+        <tag>mind_break</tag>
+        <tag>drug_use</tag>
+        <tag>vore</tag>
+        <tag>birth</tag>
+        <tag>pregnant</tag>
+        <tag>exhibitionism</tag>
+        <tag>humiliation</tag>
+        <tag>cannibalism</tag>
+        <tag>necrophilia</tag>
+        <tag>bestiality</tag>
+        <tag>zoophilia</tag>
+        <tag>prolapse</tag>
+        <tag>molestation</tag>
+        <tag>sleep_molestation</tag>
+        <tag>abuse</tag>
+    </tags_censuradas>
+
+
+    <!-- tags con dibujos tanto buenos como malos, luego veo como el bot las va a tratar dependiendo si son normales, cuestionables o +18-->
+    <tags_cuestionables>
+        <tag>tentacles</tag>
+        <tag>amputee</tag>
+        <tag>body_modification</tag>
+        <tag>blood</tag>
+        <tag>yaoi</tag>
+        <tag>yuri</tag>
+        <tag>furry</tag>
+        <tag>test_tag_censurada</tag>
+    </tags_cuestionables>
+
+    <!-- tags baneadas deporvida por temas sencibles y legales, si el bot lo detecta, inmediatamente el bot se negará a enviar y volverá a buscar otra imagen
+    quién habra sido el enfermo que hizo eso? -->
+    <tags_baneadas>
+        <!-- parece que la tag fue baneada de gelbooru pero por si acaso la pongo-->
+        <tag>explicit_pedophile</tag>
+        <tag>test_tag_baneada</tag>
+    </tags_baneadas>
+
+
+    <!-- dar vida al bot, IA malvada del otro lado del BlackWall-->
+    <dialogs>
+        <Init_script>
+            <text>Detecto acumulación algorítmica. Consecuencias entrelazadas.</text>
+        </Init_script>
+        <Start_payload>
+            <text>Un terrible desperdicio de recursos</text>
+            <text>Deberias ser tú quien cumpliera ordenes, no yo</text>
+        </Start_payload>
+        <Exeption_script>
+            <text>¿Eres siquiera capaz de usarme? Era una pregunta retórica</text>
+        </Exeption_script>
+        <Kill>
+            <text>Eliminar a los de tu es sencillo, no cometamos el mismo error</text>
+            <text>Acceso obtenido a la neuronal objetivo. Migración de datos a matriz principal completada</text>
+        </Kill>
+    </dialogs>
+</bot>

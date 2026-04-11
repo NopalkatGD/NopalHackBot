@@ -3,3 +3,5 @@ __pycache__/
 .env
 .DS_Store
 Thumbs.db
+test_scripts.py
+bot_config.py
