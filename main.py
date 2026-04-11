@@ -12,9 +12,20 @@ def start_bot():
             print('[+] Inicializando Bot')
             bot_instance.bot.polling(timeout=50, long_polling_timeout=5)
         except Exception as e:
+            error_str = str(e)
             print(f"[X] Error en el bot: {e}")
-            print("[!] Reiniciando bot en 5 segundos...")
-            time.sleep(5)
+            
+            if "429" in error_str and "retry after" in error_str:
+                try:
+                    retry_seconds = int(error_str.split("retry after")[1].split(".")[0].strip())
+                    print(f"[!] Rate limited. Esperando {retry_seconds} segundos...")
+                    time.sleep(retry_seconds)
+                except:
+                    print("[!] Reiniciando bot en 60 segundos...")
+                    time.sleep(60)
+            else:
+                print("[!] Reiniciando bot en 5 segundos...")
+                time.sleep(5)
 
 start_bot()
 @app.route("/")
