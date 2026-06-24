@@ -5,6 +5,7 @@ import comandos_xml
 import peticiones_gelbooru
 import asyncio
 import random
+import time
 
 
 class TelegramConfig:
@@ -97,7 +98,8 @@ class TelegramConfig:
         try:
             ultimo_post = None
             
-            for _ in range(5):
+            for attempt in range(5):
+                time.sleep(0.3)
                 file_url, post_gel_url, source_url, tags_lst = self.search_gel_file(tags)
                 ultimo_post = post_gel_url
                 
