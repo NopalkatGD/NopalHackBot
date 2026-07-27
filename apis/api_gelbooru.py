@@ -12,7 +12,7 @@ class GelbooruConfig:
 
         self.base_url = "https://gelbooru.com/index.php"
 
-    def get_json(self, tags_lst: list[str], limit: int = 1):
+    def get_json(self, tags_lst=[''], limit: int = 1):
 
         tags_lst.append("sort:random")
         tags = " ".join(tags_lst)
@@ -34,7 +34,7 @@ class GelbooruConfig:
 
         data = respuesta.json()["post"][0]
 
-        file_url =data["sample_url"]
+        file_url =data["file_url"]
 
         gelbooru_id = data["id"]
         gelbooru_url = f"https://gelbooru.com/index.php?page=post&s=view&id={gelbooru_id}"
