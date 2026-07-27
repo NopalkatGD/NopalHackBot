@@ -26,12 +26,20 @@ class GelbooruConfig:
         respuesta = requests.get(url, timeout=15)
 
         if respuesta.status_code == 429:
-            return None, None, None, None
+            raise Exception(f"Rate limit de Gelbooru (429)")
 
-        data = respuesta.json()
+        if respuesta.status_code != 200:
+            raise Exception(f"Gelbooru respondió con status {respuesta.status_code}: {respuesta.text[:200]}")
+
+        try:
+            data = respuesta.json()
+        except Exception:
+            raise Exception(f"Respuesta no es JSON: {respuesta.text[:200]}")
 
         if "post" not in data:
-            return None, None, None, None
+            attrs = data.get("@attributes", {})
+            count = attrs.get("count", 0)
+            raise Exception(f"Gelbooru sin resultados. count={count}, attributes={attrs}")
 
         data = data["post"][0]
 
