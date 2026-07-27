@@ -12,9 +12,10 @@ class GelbooruConfig:
 
         self.base_url = "https://gelbooru.com/index.php"
 
-    def get_json(self, tags_lst=[''], limit: int = 1):
+    def get_json(self, tags_lst=[], limit: int = 1):
 
-        tags_lst.append("sort:random")
+        tags = " ".join(tags_lst + ["sort:random"])
+
         tags = " ".join(tags_lst)
         params = {
             "page": "dapi",
@@ -28,6 +29,11 @@ class GelbooruConfig:
         }
         respuesta = requests.get(self.base_url, params=params)
 
+
+        #borrar luego de pruebas
+        print(f"tags_lst = {tags_lst}")
+        print(f"tags = {tags}")
+        print(respuesta.url)
 
         if "post" not in respuesta.json():
             return None, None, None, None

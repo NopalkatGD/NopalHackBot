@@ -61,16 +61,10 @@ class TelegramConfig:
     def search_gel_file(self, parametros:list[str]):
         try:
             gelbooru = api_gelbooru.GelbooruConfig()
-            data = gelbooru.get_json(tags_lst=parametros, limit=1)
-            posts = data.get("post")
-            if not posts:
+            result = gelbooru.get_json(tags_lst=parametros, limit=1)
+            if result is None:
                 return None, None, None, None
-            post = posts[0]
-            file_url = post.get("file_url")
-            post_id = post.get("id")
-            post_gel_url = f"https://gelbooru.com/index.php?page=post&s=view&id={post_id}"
-            source_url = post.get("source", "")
-            tags_lst = post.get("tags", "")
+            file_url, post_gel_url, source_url, tags_lst = result
             return file_url, post_gel_url, source_url, tags_lst
         except Exception as e:
             print(f"Error al buscar en Gelbooru: {e}")
@@ -109,6 +103,10 @@ class TelegramConfig:
             
             for attempt in range(5):
                 time.sleep(0.3)
+
+                #borrar luego
+                print(f"Tags enviadas por Telegram: {tags}")
+
                 file_url, post_gel_url, source_url, tags_lst = self.search_gel_file(tags)
                 ultimo_post = post_gel_url
                 
