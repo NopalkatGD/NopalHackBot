@@ -16,26 +16,24 @@ class GelbooruConfig:
         if tags_lst is None:
             tags_lst = []
 
-        tags = " ".join(tags_lst)
-        params = {
-            "page": "dapi",
-            "q": "index",
-            "json": "1",
-            "api_key": self.api_key,
-            "user_id": self.user_id,
-            "tags": tags,
-            "limit": limit,
-            "s": "post",
-        }
-        respuesta = requests.get(self.base_url, params=params, timeout=15)
+        tags = "+".join(tags_lst) + "+sort:random+"
+        url = (
+            f"{self.base_url}?page=dapi&q=index&json=1"
+            f"&api_key={self.api_key}&user_id={self.user_id}"
+            f"&tags={tags}&limit={limit}&s=post"
+        )
+
+        respuesta = requests.get(url, timeout=15)
 
         if respuesta.status_code == 429:
             return None, None, None, None
 
-        if "post" not in respuesta.json():
+        data = respuesta.json()
+
+        if "post" not in data:
             return None, None, None, None
 
-        data = respuesta.json()["post"][0]
+        data = data["post"][0]
 
         file_url = data["file_url"]
 

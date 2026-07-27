@@ -105,11 +105,11 @@ class TelegramConfig:
 
                 file_url, post_gel_url, source_url, tags_lst = self.search_gel_file(tags)
 
-                
+
                 ultimo_post = post_gel_url
                 
                 if not file_url:
-                    self.bot.reply_to(message, f"No se encontraron resultados para los tags proporcionados. {tags}")
+                    self.bot.reply_to(message, f"No se encontraron resultados para los tags proporcionados. {tags}\n{file_url}, \n{post_gel_url}, \n{source_url}, \n{tags_lst}")
                     return
                 
                 tags_lst = tags_lst or []
