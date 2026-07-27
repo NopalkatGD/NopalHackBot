@@ -60,7 +60,8 @@ class TelegramConfig:
 
     def search_gel_file(self, parametros:list[str]):
         try:
-            file_url, post_gel_url, source_url, tags_lst = api_gelbooru.GelbooruConfig().get_json(tags_lst=parametros, limit=1)
+            gelbooru = api_gelbooru.GelbooruConfig()
+            file_url, post_gel_url, source_url, tags_lst = gelbooru.get_json(tags_lst=parametros, limit=1)
             return file_url, post_gel_url, source_url, tags_lst
         except Exception as e:
             print(f"Error al buscar en Gelbooru: {e}")
