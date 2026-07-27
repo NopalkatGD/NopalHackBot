@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv
 import requests
+import time
+import random
 
 
 class GelbooruConfig:
@@ -23,32 +25,38 @@ class GelbooruConfig:
             f"&tags={tags}&limit={limit}&s=post"
         )
 
-        respuesta = requests.get(url, timeout=15)
+        for attempt in range(5):
+            respuesta = requests.get(url, timeout=15)
 
-        if respuesta.status_code == 429:
-            raise Exception(f"Rate limit de Gelbooru (429)")
+            if respuesta.status_code == 429:
+                wait_time = 2 ** attempt + random.uniform(0, 1)
+                print(f"[!] Rate limit Gelbooru, reintento {attempt + 1}/5 en {wait_time:.1f}s")
+                time.sleep(wait_time)
+                continue
 
-        if respuesta.status_code != 200:
-            raise Exception(f"Gelbooru respondió con status {respuesta.status_code}: {respuesta.text[:200]}")
+            if respuesta.status_code != 200:
+                raise Exception(f"Gelbooru respondió con status {respuesta.status_code}: {respuesta.text[:200]}")
 
-        try:
-            data = respuesta.json()
-        except Exception:
-            raise Exception(f"Respuesta no es JSON: {respuesta.text[:200]}")
+            try:
+                data = respuesta.json()
+            except Exception:
+                raise Exception(f"Respuesta no es JSON: {respuesta.text[:200]}")
 
-        if "post" not in data:
-            attrs = data.get("@attributes", {})
-            count = attrs.get("count", 0)
-            raise Exception(f"Gelbooru sin resultados. count={count}, attributes={attrs}")
+            if "post" not in data:
+                attrs = data.get("@attributes", {})
+                count = attrs.get("count", 0)
+                raise Exception(f"Gelbooru sin resultados. count={count}, attributes={attrs}")
 
-        data = data["post"][0]
+            data = data["post"][0]
 
-        file_url = data["file_url"]
+            file_url = data["file_url"]
 
-        gelbooru_id = data["id"]
-        gelbooru_url = f"https://gelbooru.com/index.php?page=post&s=view&id={gelbooru_id}"
+            gelbooru_id = data["id"]
+            gelbooru_url = f"https://gelbooru.com/index.php?page=post&s=view&id={gelbooru_id}"
 
-        source_url = data["source"]
-        tags_post = data["tags"].split()
+            source_url = data["source"]
+            tags_post = data["tags"].split()
 
-        return file_url, gelbooru_url, source_url, tags_post
+            return file_url, gelbooru_url, source_url, tags_post
+
+        raise Exception("Gelbooru rate limit excedido después de 5 intentos")
