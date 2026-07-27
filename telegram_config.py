@@ -58,17 +58,13 @@ class TelegramConfig:
         
 
 
-    def search_gel_file(self, parametros:list[str]):
-        try:
-            gelbooru = api_gelbooru.GelbooruConfig()
-            result = gelbooru.get_json(tags_lst=parametros, limit=1)
-            if result is None:
-                return None, None, None, None
-            file_url, post_gel_url, source_url, tags_lst = result
-            return file_url, post_gel_url, source_url, tags_lst
-        except Exception as e:
-            print(f"Error al buscar en Gelbooru: {e}")
-            return None, None, None, None
+    def search_gel_file(self, parametros):
+        gelbooru = api_gelbooru.GelbooruConfig()
+
+        result = gelbooru.get_json(tags_lst=parametros, limit=1)
+        print("RESULT =", result)
+
+        return result
     
     def senfile(self, message):
 
@@ -108,6 +104,8 @@ class TelegramConfig:
                 print(f"Tags enviadas por Telegram: {tags}")
 
                 file_url, post_gel_url, source_url, tags_lst = self.search_gel_file(tags)
+
+                
                 ultimo_post = post_gel_url
                 
                 if not file_url:
