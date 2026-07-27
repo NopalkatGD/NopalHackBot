@@ -13,6 +13,8 @@ class GelbooruConfig:
         self.base_url = "https://gelbooru.com/index.php"
 
     def get_json(self, tags_lst: list[str], limit: int = 1):
+
+        tags_lst.append("sort:random")
         tags = " ".join(tags_lst)
         params = {
             "page": "dapi",
