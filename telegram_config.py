@@ -61,10 +61,9 @@ class TelegramConfig:
     def search_gel_file(self, parametros):
         gelbooru = api_gelbooru.GelbooruConfig()
 
-        result = gelbooru.get_json(tags_lst=parametros, limit=1)
-        print("RESULT =", result)
+        file_url, post_gel_url, source_url, tags_lst = gelbooru.get_json(tags_lst=parametros, limit=1)
 
-        return result
+        return file_url, post_gel_url, source_url, tags_lst
     
     def senfile(self, message):
 
