@@ -57,13 +57,6 @@ class TelegramConfig:
             self.bot.send_message(chat_id=message.chat.id, text=f'{blackwall_text}')
         
 
-
-    def search_gel_file(self, parametros):
-        gelbooru = api_gelbooru.GelbooruConfig()
-
-        file_url, post_gel_url, source_url, tags_lst = gelbooru.get_json(tags_lst=parametros, limit=1)
-
-        return file_url, post_gel_url, source_url, tags_lst
     
     def senfile(self, message):
 
@@ -102,13 +95,15 @@ class TelegramConfig:
                 #borrar luego
                 print(f"Tags enviadas por Telegram: {tags}")
 
-                file_url, post_gel_url, source_url, tags_lst = self.search_gel_file(tags)
+                gelbooru = api_gelbooru.GelbooruConfig()
+                respuesta = gelbooru.get_json(tags_lst=tags, limit=1)
+                file_url, post_gel_url, source_url, tags_lst = respuesta
 
 
                 ultimo_post = post_gel_url
                 
                 if not file_url:
-                    self.bot.reply_to(message, f"No se encontraron resultados para los tags proporcionados. {tags}\n{file_url}, \n{post_gel_url}, \n{source_url}, \n{tags_lst}")
+                    self.bot.reply_to(message, f"No se encontraron resultados para los tags proporcionados. {tags}\n{file_url}, \n{post_gel_url}, \n{source_url}, \n{tags_lst}, \n{respuesta}")
                     return
                 
                 tags_lst = tags_lst or []
