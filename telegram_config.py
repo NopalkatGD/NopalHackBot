@@ -2,8 +2,7 @@ import telebot
 import corrupt_text
 import credenciales
 import comandos_xml
-import peticiones_gelbooru
-import asyncio
+import apis.api_gelbooru as api_gelbooru
 import random
 import time
 
@@ -60,12 +59,12 @@ class TelegramConfig:
 
 
     def search_gel_file(self, parametros:list[str]):
-        loop = asyncio.new_event_loop()
-        file_url, post_gel_url, source_url, tags_lst = loop.run_until_complete(peticiones_gelbooru.PeticionesGelbooru().main(parametros))
-        loop.close()
-        if not file_url:
+        try:
+            file_url, post_gel_url, source_url, tags_lst = api_gelbooru.GelbooruConfig().get_json(tags_lst=parametros, limit=1)
+            return file_url, post_gel_url, source_url, tags_lst
+        except Exception as e:
+            print(f"Error al buscar en Gelbooru: {e}")
             return None, None, None, None
-        return file_url, post_gel_url, source_url, tags_lst
     
     def senfile(self, message):
 
