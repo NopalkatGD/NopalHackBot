@@ -3,8 +3,14 @@ import time
 import os
 import dotenv
 import threading
+import logging
 from bot import telegram_bot
 import telebot.types
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
 
 dotenv.load_dotenv()
 
