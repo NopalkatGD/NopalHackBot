@@ -117,6 +117,9 @@ class TelegramBot:
                 gelbooru = gelbooru_api.GelbooruAPI()
                 data = gelbooru.get_json(tags_lst=parametros, limit=1)
 
+                if not data:
+                    continue
+
                 file_url = data[0]
                 post_gel_url = data[1]
                 source_url = data[2]
