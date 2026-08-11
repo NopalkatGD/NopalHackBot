@@ -1,3 +1,4 @@
+import os
 import telebot
 import time
 import random
@@ -11,7 +12,10 @@ class TelegramBot:
 
         #crear bot
         self.bot = telebot.TeleBot(token_key)
-        self.xml_data = xml_files.XMLdata(r"src\bot_opts.xml")
+        xml_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'src', 'bot_opts.xml'))
+        if not os.path.exists(xml_path):
+            xml_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'bot_opts.xml'))
+        self.xml_data = xml_files.XMLdata(xml_path)
 
         #filtrar tags
         self.tags_censuradas = self.xml_data.lst_valor_por_ruta('.//tags_censuradas/')
