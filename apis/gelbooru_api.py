@@ -28,7 +28,7 @@ class GelbooruAPI:
         }
 
         last_error = None
-        for attempt in range(5):
+        for attempt in range(1):
             try:
                 response = requests.get(self.base_url, params=params, timeout=15)
 

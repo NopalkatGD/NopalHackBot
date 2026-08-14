@@ -10,6 +10,9 @@
             <comando descripcion="Buscar una imagen cuestionable en Gelbooru" respuesta = "q img">glbr_q</comando>
             <comando descripcion="Buscar una imagen +18 en Gelbooru" respuesta = "x img">glbr_x</comando>
         </gelbooru_comands>
+        <safebooru_comands>
+            <comando descripcion="Buscar una imagen aleatoria en Safebooru" respuesta = "img">sfbr</comando>
+        </safebooru_comands>
         <message_manager>
             <comando descripcion="Eliminar mensajes" respuesta="dlt msg">dlt</comando>
         </message_manager>

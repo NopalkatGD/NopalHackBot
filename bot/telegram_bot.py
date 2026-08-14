@@ -5,7 +5,7 @@ import random
 import requests
 
 from py_src import xml_files, corrupt_text
-from apis import gelbooru_api
+from apis import gelbooru_api, safebooru_api
 
 class TelegramBot:
     def __init__(self, token_key:str):
@@ -24,6 +24,7 @@ class TelegramBot:
         #declarar comandos
         comandos_default = list(self.xml_data.dict_comandos('.//bot_comands/default_comands/').keys())
         comandos_gelbooru = list(self.xml_data.dict_comandos('.//bot_comands/gelbooru_comands/').keys())
+        comandos_safebooru = list(self.xml_data.dict_comandos('.//bot_comands/safebooru_comands/').keys())
         comandos_msg_mngr = list(self.xml_data.dict_comandos('.//bot_comands/message_manager/').keys())
 
 
@@ -31,7 +32,8 @@ class TelegramBot:
 
         #agregar manejadores de comandos
         self.bot.register_message_handler(self.default_messages, commands=comandos_default, chat_types=chat_types)
-        self.bot.register_message_handler(self.senfile, commands=comandos_gelbooru, chat_types=chat_types)
+        self.bot.register_message_handler(self.gelbooru_sendfile, commands=comandos_gelbooru, chat_types=chat_types)
+        self.bot.register_message_handler(self.safebooru_sendfile, commands=comandos_safebooru, chat_types=chat_types)
         self.bot.register_message_handler(self.dlt_message, commands=comandos_msg_mngr, chat_types=chat_types)
 
         #agregar comandos al bot
@@ -39,6 +41,7 @@ class TelegramBot:
         for xpath in [
             './/bot_comands/default_comands/',
             './/bot_comands/gelbooru_comands/',
+            './/bot_comands/safebooru_comands/',
             './/bot_comands/message_manager/'
         ]:
             datos_comandos = self.xml_data.dict_comandos(xpath)
@@ -87,7 +90,7 @@ class TelegramBot:
         except Exception as e:
             self.bot.reply_to(message, f"No se pudo borrar el mensaje.\nError: {e}")
 
-    def senfile(self, message):
+    def gelbooru_sendfile(self, message):
         comando, parametros = self.usr_input(message)
 
         censurar=False
@@ -165,15 +168,11 @@ class TelegramBot:
                         self.bot.reply_to(message, f"El archivo encontrado no es un formato compatible.\nPost en Gelbooru: {post_gel_url}")
                     return
                 except Exception as e:
-                    print("=" * 50)
-                    print(type(e))
-                    print(e)
-
                     if "wrong type of the web page content" not in str(e):
                         self.bot.reply_to(message, f"Error al enviar: {e}")
                         return
                     continue
-            self.bot.reply_to(message, f"No se encontró una imagen válida después de varios intentos. Intenta con otros tags.\nÚltimo post: {ultimo_post}")
+            self.bot.reply_to(message, f"La seguridad de Gelbooru está fastidiando.\nNo se puede obtener ninguna información.")
             return
         
         except KeyError as e:
@@ -181,6 +180,45 @@ class TelegramBot:
             return
         except Exception as e:
             self.bot.reply_to(message, f"Error inesperado: {e}")
+            return
+
+    def safebooru_sendfile(self, message):
+        _, parametros = self.usr_input(message)
+        try:
+            for attemp in range(1,5):
+                safebooru = safebooru_api.SafebooruAPI()
+                data = safebooru.get_data(tags_lst=parametros, limit=1)
+
+                if not data or len(data) < 3:
+                    continue
+
+                post_safebooru_url = data[0]
+                file_url = data[1]
+                source_url = data[2]
+
+                dict_file_types = {
+                                    'imagen': ['.jpg', '.jpeg', '.png'],
+                                    'video': ['.mp4', '.webm'],
+                                    'animacion': ['.gif', '.webp']
+                                    }
+                try:
+                    if file_url.endswith(tuple(dict_file_types['imagen'])):
+                        self.bot.send_photo(chat_id=message.chat.id, photo=file_url, caption=f"<a href='{post_safebooru_url}'>Source</a> | <a href='{source_url}'>Original Source</a>", parse_mode="HTML")
+                    elif file_url.endswith(tuple(dict_file_types['video'])):
+                        self.bot.send_video(chat_id=message.chat.id, video=file_url, caption=f"<a href='{post_safebooru_url}'>Source</a> | <a href='{source_url}'>Original Source</a>", parse_mode="HTML")
+                    elif file_url.endswith(tuple(dict_file_types['animacion'])):
+                        self.bot.send_animation(chat_id=message.chat.id, animation=file_url, caption=f"<a href='{post_safebooru_url}'>Source</a> | <a href='{source_url}'>Original Source</a>", parse_mode="HTML")
+                    else:
+                        self.bot.reply_to(message, f"El archivo encontrado no es un formato compatible.\nPost en Safebooru: {post_safebooru_url}")
+                except Exception as e:
+                    if "wrong type of the web page content" not in str(e):
+                        self.bot.reply_to(message, f"Error al enviar: {e}")
+                        return
+                    continue
+                return
+            
+        except Exception as e:
+            self.bot.reply_to(message, f"Error al buscar la imagen en Safebooru: {e}")
             return
 
     def configurar_webhook(self, webhook_url: str):
